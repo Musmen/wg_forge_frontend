@@ -1,8 +1,9 @@
-import { fetchOrders, fetchUsers } from '../api/dataBaseAPI';
+import { fetchCompanies, fetchOrders, fetchUsers } from '../api/dataBaseAPI';
 
 class Model {
   orders = null;
   users = null;
+  companies = null;
 
   getOrders() {
     return fetchOrders()
@@ -18,6 +19,12 @@ class Model {
       );
   }
 
+  getCompanies() {
+    return fetchCompanies()
+      .then(
+        companies => this.companies = companies
+      );
+  }
 }
 
 export default new Model();
