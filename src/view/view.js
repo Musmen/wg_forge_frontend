@@ -1,4 +1,4 @@
-import { getCardNumberMask, getOrderTime } from '../common/helpers';
+import { getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix } from '../common/helpers';
 
 class View {
   tableBody = null;
@@ -7,21 +7,21 @@ class View {
     this.tableBody = document.querySelector('.table-body');
   }
 
-  renderOrders(orders) {
+  renderOrders(orders, users) {
     const ordersFragment = new DocumentFragment();
-    orders.forEach(order => ordersFragment.append(this.renderOrderTableRow(order)));
+    orders.forEach(order => ordersFragment.append(this.renderOrderTableRow(order, users)));
     this.tableBody.append(ordersFragment);
   }
 
-  renderOrderTableRow(order) {
+  renderOrderTableRow(order, users) {
     const orderTableRow = document.createElement('tr');
 
     orderTableRow.className='table-row';
     orderTableRow.id=`order_${order.id}`;
-    
+
     orderTableRow.insertAdjacentHTML('beforeend',
       `<td class="order-transaction-id">${order.transaction_id}</td>
-      <td class="order-user-data">${order.user_id}</td>
+      <td class="order-user-data user_data">${this.renderUserCellLink(order.user_id, users)}</td>
       <td class="order-date">${getOrderTime(order.created_at)}</td>
       <td class="order-total">$${order.total}</td>
       <td class="order-card-number">${getCardNumberMask(order.card_number)}</td>
@@ -30,6 +30,11 @@ class View {
     )
 
     return orderTableRow;
+  }
+
+  renderUserCellLink(orderUserId, users) {
+    const currentUser = users.find(user => user.id === orderUserId);
+    return `<a href="#">${getUserPrefix(currentUser)} ${getUserFullName(currentUser)}</a>`
   }
 }
 
