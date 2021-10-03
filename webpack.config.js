@@ -4,6 +4,15 @@ var HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/app.js",
+  module: {
+    rules: [
+      {
+        test: /\.(js)$/,
+        exclude: /node_modules/,
+        use: ['babel-loader']
+      }
+    ]
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js"
@@ -20,5 +29,5 @@ module.exports = {
     before: function(app, server) {
       app.use("/api", express.static(path.join(__dirname, "data")));
     }
-  }
+  },
 };

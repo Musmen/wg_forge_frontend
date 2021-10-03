@@ -5,6 +5,35 @@
     <title>WG Forge Test</title>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app">
+        <table>
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>User Info</th>
+                    <th>Order Date</th>
+                    <th>Order Amount</th>
+                    <th>Card Number</th>
+                    <th>Card Type</th>
+                    <th>Location</th>
+                </tr>
+            </thead>
+            <tbody class="table-body">
+               
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
+
+<template id="table-row-template">
+    <tr class="table-row" id="order_">
+        <td class="order-transaction-id">8292e007-4682-idkfa-a404-eed9662fa5cc</td>
+        <td class="order-user-data">15</td>
+        <td class="order-date">21/12/2017, 1:13:47 AM</td>
+        <td class="order-total">$453.47</td>
+        <td class="order-card-number">30********4733</td>
+        <td class="order-card-type">diners-club-carte-blanche</td>
+        <td class="order-location">IS (211.145.96.59)<td>
+    </tr>
+</template>
