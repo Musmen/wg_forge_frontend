@@ -8,13 +8,23 @@ class Controller {
     this.view = view;
     this.view.init();
 
-    this.addOrders();
+    this.renderFullTable();
   }
 
-  async addOrders() {
-    const orders = await this.model.getOrders();
-    debugger;
-    this.view.renderOrders(orders);
+  async renderFullTable() {
+    await this.fetchFullData();
+    this.renderOrders();
+  }
+
+  fetchFullData() {
+    return Promise.all([
+      this.model.getOrders(),
+      this.model.getUsers(),
+    ]);
+  }
+  
+  renderOrders() {
+    this.view.renderOrders(this.model.orders, this.model.users);
   }
 }
 
