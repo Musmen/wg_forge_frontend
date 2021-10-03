@@ -1,3 +1,5 @@
+import './styles.css';
+
 import 'regenerator-runtime/runtime';
 
 import model from './model/model';
