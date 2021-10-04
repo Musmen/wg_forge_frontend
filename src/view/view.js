@@ -66,7 +66,7 @@ class View {
       </td>
       <td class="order-location">
         ${order.order_country} (${order.order_ip})
-      <td>`
+      </td>`
     )
 
     return orderTableRow;

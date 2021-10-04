@@ -1,4 +1,5 @@
-import './styles.css';
+import 'bootstrap';
+import './styles.scss';
 
 import 'regenerator-runtime/runtime';
 

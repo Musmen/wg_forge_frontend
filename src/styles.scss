@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/bootstrap";
+
+.hide {
+  display: none;
+}
+
+.table {
+  th {
+    color: red;
+    user-select: none;
+  }
+}
