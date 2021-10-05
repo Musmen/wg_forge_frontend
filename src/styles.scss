@@ -1,0 +1,19 @@
+@import "./scss/normalize.scss";
+@import "~bootstrap/scss/bootstrap";
+
+.hide {
+  display: none;
+}
+
+[data-sort-by-properties] {
+  margin-right: 10px;
+
+  cursor: pointer;
+  user-select: none;
+
+  &:focus,
+  &:hover,
+  &:active {
+    filter: invert(90%);
+  }
+}

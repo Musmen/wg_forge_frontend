@@ -1,6 +1,8 @@
 var express = require("express");
 var path = require("path");
 var HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
+const autoprefixer = require("autoprefixer");
 
 module.exports = {
   entry: "./src/app.js",
@@ -9,13 +11,15 @@ module.exports = {
       {
         test: /\.(js)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: ["babel-loader"]
       },
       {
-        test: /\.css$/,
+        test: /\.s[ac]ss$/i,
         use: [
-          'style-loader',
-          'css-loader'
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader",
         ]
     }
     ]
@@ -27,7 +31,14 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/index.html"
-    })
+    }),
+    new webpack.LoaderOptionsPlugin({
+      options: {
+          postcss: [
+              autoprefixer()
+          ]
+      }
+  })
   ],
   devServer: {
     contentBase: path.join(__dirname, "dist"),

@@ -1,6 +1,6 @@
+import { CLASS_NAMES, SORTED_LABEL } from '../common/constants';
 import { 
-  getCardNumberMask, getUserCompanyById, getCurrentUserById,
-  getOrderTime, getUserFullName, getUserPrefix, getUserBirthday,
+  getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix, getUserBirthday,
 } from '../common/helpers';
 
 class View {
@@ -8,10 +8,16 @@ class View {
 
   table = null;
   tableBody = null;
+  tableHead = null;
+  sortedMark = null;
 
   init() {
-    this.table = document.querySelector('.table');
-    this.tableBody = document.querySelector('.table-body');
+    this.sortedMark = document.createElement('span');
+    this.sortedMark.innerHTML = SORTED_LABEL;
+
+    this.table = document.querySelector(`.${CLASS_NAMES.TABLE.MAIN}`);
+    this.tableBody = this.table.querySelector(`.${CLASS_NAMES.TABLE.BODY}`);
+    this.tableHead = this.table.querySelector(`.${CLASS_NAMES.TABLE.HEAD}`);
   }
 
   removeAllHandlers() {
@@ -20,22 +26,36 @@ class View {
     });
   }
 
+  clearOrdersTable() {
+    this.removeAllHandlers();
+    this.tableBody.innerHTML = '';
+  }
+
   addUserLinkOnClickHandler(userLinkOnClickHandler) {
     this.tableBody.addEventListener('click', userLinkOnClickHandler);
     this.listenersList.push({event: 'click', handler: userLinkOnClickHandler});
   }
 
-  renderOrders(orders, users, companies) {
+  addTableHeadkOnClickHandler(tableHeadOnClickHandler) {
+    this.tableHead.addEventListener('click', tableHeadOnClickHandler);
+    this.listenersList.push({event: 'click', handler: tableHeadOnClickHandler});
+  }
+
+  addSortedMark(element) {
+    element.insertAdjacentElement('beforeend', this.sortedMark);
+  }
+
+  renderOrders(ordersForView) {
     const ordersFragment = new DocumentFragment();
-    orders.forEach(
-      order => {
-        const currentUser = getCurrentUserById(users, order.user_id);
-        const userCompany = getUserCompanyById(companies, currentUser.company_id);
+
+    ordersForView.forEach(
+      ({ order, currentUser, userCompany }) => {
         ordersFragment.append(
           this.renderOrderTableRow(order, currentUser, userCompany)
         )
       }
     );
+    
     this.tableBody.append(ordersFragment);
   }
 
@@ -66,7 +86,7 @@ class View {
       </td>
       <td class="order-location">
         ${order.order_country} (${order.order_ip})
-      <td>`
+      </td>`
     )
 
     return orderTableRow;
@@ -92,30 +112,24 @@ class View {
   }
 
   renderUserBirthday(currentUser) {
-    if (currentUser.birthday) {
-      return `<p>Birthday: ${getUserBirthday(currentUser.birthday)}</p>`;
-    }
-    return '';
+    if (!currentUser.birthday) return '';
+    return `<p>Birthday: ${getUserBirthday(currentUser.birthday)}</p>`;
   }
 
   renderUserAvatar(currentUser) {
-    if (currentUser.avatar) {
-      return `<p><img src="${currentUser.avatar}" width="100px"></p>`;
-    }
-    return '';
+    if (!currentUser.avatar) return '';
+    return `<p><img src="${currentUser.avatar}" width="100px"></p>`;
   }
 
   renderUserCompanyDetails(userCompany) {
-    if (userCompany) {
-      return `
-        <p>
-          Company: <a href="${userCompany.url || ''}" target="_blank">${userCompany.title}</a>
-        </p>
-        <p>
-          Industry: ${userCompany.industry}
-        </p>`;
-    }
-    return '';
+    if (!userCompany) return '';
+    return `
+      <p>
+        Company: <a href="${userCompany.url || ''}" target="_blank">${userCompany.title}</a>
+      </p>
+      <p>
+        Industry: ${userCompany.industry}
+      </p>`;
   }
 }
 

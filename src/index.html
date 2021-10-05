@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>WG Forge Test</title>
-</head>
-<body>
-    <div id="app">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Transaction ID</th>
-                    <th>User Info</th>
-                    <th>Order Date</th>
-                    <th>Order Amount</th>
-                    <th>Card Number</th>
-                    <th>Card Type</th>
-                    <th>Location</th>
-                </tr>
-            </thead>
-            <tbody class="table-body">
-               
-            </tbody>
-        </table>
+  </head>
+  <body>
+    <div id="app" class="table-responsive">
+      <table class="main-table table table-striped table-hover">
+        <thead class="main-table-head table-dark">
+          <tr>
+            <th data-sort-by-properties="transaction_id">Transaction ID</th>
+            <th 
+              data-sort-by-object="currentUser" 
+              data-sort-by-properties="first_name,last_name">User Info</th>
+            <th 
+              data-is-numeric-sorting="true" 
+              data-sort-by-properties="created_at">Order Date</th>
+            <th 
+              data-is-numeric-sorting="true" 
+              data-sort-by-properties="total">Order Amount</th>
+            <th>Card Number</th>
+            <th data-sort-by-properties="card_type">Card Type</th>
+            <th data-sort-by-properties="order_country,order_ip">Location</th>
+          </tr>
+        </thead>
+        <tbody class="main-table-body table-striped">
+
+        </tbody>
+      </table>
     </div>
-</body>
+  </body>
 </html>
