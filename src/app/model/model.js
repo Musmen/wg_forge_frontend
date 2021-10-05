@@ -5,6 +5,10 @@ class Model {
   users = null;
   companies = null;
 
+  init() {
+    return this.getFullTableData();
+  }
+
   getOrders() {
     return fetchOrders()
       .then(
@@ -24,6 +28,14 @@ class Model {
       .then(
         companies => this.companies = companies
       );
+  }
+
+  getFullTableData() {
+    return Promise.all([
+      this.getOrders(),
+      this.getUsers(),
+      this.getCompanies(),
+    ]);
   }
 }
 

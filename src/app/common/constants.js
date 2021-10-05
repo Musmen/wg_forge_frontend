@@ -11,7 +11,16 @@ export const USER_PREFIX_BY_GENDER = {
 };
 
 export const CLASS_NAMES = {
-  USER_LINK: 'user-link',
-  USER_DETAILS: 'user-details',
+  TABLE: {
+    MAIN: 'main-table',
+    BODY: 'main-table-body',
+    HEAD: 'main-table-head',
+  },
+  USER: {
+    LINK: 'user-link',
+    DETAILS: 'user-details',
+  },
   HIDE: 'hide',
 };
+
+export const SORTED_LABEL = '&#8595;';

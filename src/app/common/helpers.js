@@ -32,3 +32,22 @@ export const getCurrentUserById =
 
 export const getUserCompanyById = 
   (companies, userCompanyId) => findListItemById(companies, userCompanyId);
+
+export const getCompareFunction = sortState => {
+  const [compareProperty, secondCompareProperty] = sortState.sortByProperties;
+  const sortByObject = sortState.sortByObject || 'order';
+
+  if (sortState.isNumericSorting) return (firstCompareOrder, secondCompareOrder) => 
+  firstCompareOrder[sortByObject][compareProperty] - secondCompareOrder[sortByObject][compareProperty]
+
+  return (firstCompareOrder, secondCompareOrder) => 
+    firstCompareOrder[sortByObject][compareProperty]
+      .localeCompare(secondCompareOrder[sortByObject][compareProperty]) 
+    || (
+      secondCompareProperty && (
+        firstCompareOrder[sortByObject][secondCompareProperty]
+          .localeCompare(secondCompareOrder[sortByObject][secondCompareProperty])
+      )
+    );
+}
+

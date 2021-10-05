@@ -1,12 +1,19 @@
+@import "./scss/normalize.scss";
 @import "~bootstrap/scss/bootstrap";
 
 .hide {
   display: none;
 }
 
-.table {
-  th {
-    color: red;
-    user-select: none;
+[data-sort-by-properties] {
+  margin-right: 10px;
+
+  cursor: pointer;
+  user-select: none;
+
+  &:focus,
+  &:hover,
+  &:active {
+    filter: invert(90%);
   }
 }

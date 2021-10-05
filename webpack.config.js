@@ -11,15 +11,15 @@ module.exports = {
       {
         test: /\.(js)$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: ["babel-loader"]
       },
       {
         test: /\.s[ac]ss$/i,
         use: [
-          'style-loader',
-          'css-loader',
-          'postcss-loader',
-          'sass-loader',
+          "style-loader",
+          "css-loader",
+          "postcss-loader",
+          "sass-loader",
         ]
     }
     ]

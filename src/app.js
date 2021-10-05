@@ -3,12 +3,10 @@ import './styles.scss';
 
 import 'regenerator-runtime/runtime';
 
-import model from './model/model';
-import view from './view/view';
-import controller from './controller/controller';
+import model from './app/model/model';
+import view from './app/view/view';
+import controller from './app/controller/controller';
 
-export default (async function () {
-    window.onload = () => {  
-        controller.init(model, view);
-    }
+export default (function () {
+  window.onload = () => { controller.init(model, view); }
 }());
