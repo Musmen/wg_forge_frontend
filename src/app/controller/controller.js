@@ -28,6 +28,7 @@ class Controller {
   
   addOrdersTable() {
     this.renderOrders(this.sortOrdersForView(this.ordersForView));
+    this.renderStatistics();
 
     this.view.addUserLinkOnClickHandler(this.userLinkOnClickHandlerBinded);
     this.view.addTableHeadkOnClickHandler(this.tableHeadOnClickHandlerBinded);
@@ -52,6 +53,10 @@ class Controller {
 
   renderOrders(ordersForView) {
     this.view.renderOrders(ordersForView);
+  }
+
+  renderStatistics() {
+    this.view.renderStatistics();
   }
 
   userLinkOnClickHandler(event) {
