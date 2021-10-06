@@ -1,4 +1,6 @@
-import { CARD_MASK_SETTINGS, LOCALE_STRING, USER_PREFIX_BY_GENDER } from './constants';
+import { 
+  CARD_MASK_SETTINGS, LOCALE_STRING, MONEY_FLOAT_DIGITS, USER_PREFIX_BY_GENDER,
+} from './constants';
 
 export const fetchData = async url => {
   const response = await fetch(url);
@@ -51,3 +53,20 @@ export const getCompareFunction = sortState => {
     );
 }
 
+const numericCompare = (firstElement, secondElement) => firstElement - secondElement;
+
+export const getOrders = ordersForView => ordersForView.map(orderForView => orderForView.order);
+
+export const getAverage = (total, count) => (total / count).toFixed(MONEY_FLOAT_DIGITS);
+
+export const getOrdersTotal = orders => +orders.reduce(
+  (accumulator, currentOrder) => accumulator + +currentOrder.total, 0,
+).toFixed(MONEY_FLOAT_DIGITS);
+
+export const getMedian = array => {
+  const sortedArray = array.sort(numericCompare);
+  const middleIndex = sortedArray.length / 2;
+  return middleIndex % 1 === 0 
+    ? ((sortedArray[middleIndex - 1] + sortedArray[middleIndex]) / 2).toFixed(MONEY_FLOAT_DIGITS)
+    : sortedArray[Math.floor(middleIndex)];
+}

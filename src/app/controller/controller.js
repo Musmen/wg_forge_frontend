@@ -1,5 +1,9 @@
-import { CLASS_NAMES } from '../common/constants';
-import { getCompareFunction, getCurrentUserById, getUserCompanyById } from '../common/helpers';
+import { CLASS_NAMES, FEMALE_GENDER } from '../common/constants';
+import { 
+  getAverage,
+  getCompareFunction, getCurrentUserById, getMedian,
+  getOrders, getOrdersTotal, getUserCompanyById,
+} from '../common/helpers';
 
 class Controller {
   model = null;
@@ -28,7 +32,7 @@ class Controller {
   
   addOrdersTable() {
     this.renderOrders(this.sortOrdersForView(this.ordersForView));
-    this.renderStatistics();
+    this.renderStatistics(this.getStatistics(this.ordersForView));
 
     this.view.addUserLinkOnClickHandler(this.userLinkOnClickHandlerBinded);
     this.view.addTableHeadkOnClickHandler(this.tableHeadOnClickHandlerBinded);
@@ -55,8 +59,8 @@ class Controller {
     this.view.renderOrders(ordersForView);
   }
 
-  renderStatistics() {
-    this.view.renderStatistics();
+  renderStatistics(statistics) {
+    this.view.renderStatistics(statistics);
   }
 
   userLinkOnClickHandler(event) {
@@ -84,6 +88,30 @@ class Controller {
     this.view.addSortedMark(clickedTableHeadCellWithSortingOption);
     this.view.clearOrdersTable();
     this.addOrdersTable();
+  }
+
+  getStatistics(ordersForView) {
+    const orders = getOrders(ordersForView);
+    const ordersCount = orders.length;
+    const ordersTotal = getOrdersTotal(orders);
+    const median = getMedian(orders.map(order => +order.total));
+    const averageCheck = getAverage(ordersTotal, ordersCount);
+
+    const ordersForViewFemale =  ordersForView.filter(
+      orderForView => orderForView.currentUser.gender === FEMALE_GENDER
+    );
+    const ordersFemale = getOrders(ordersForViewFemale);
+    const ordersCountFemale = ordersFemale.length;
+    const ordersTotalFemale = getOrdersTotal(ordersFemale); 
+    const averageCheckFemale = getAverage(ordersTotalFemale, ordersCountFemale);
+    
+    const ordersCountMale = ordersCount - ordersCountFemale;
+    const ordersTotalMale = ordersTotal - ordersTotalFemale;
+    const averageCheckMale = getAverage(ordersTotalMale, ordersCountMale);
+
+    return { 
+      ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale,
+    };
   }
 
   beforeUnloadHandler() {
