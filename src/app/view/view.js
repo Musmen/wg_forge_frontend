@@ -131,6 +131,37 @@ class View {
         Industry: ${userCompany.industry}
       </p>`;
   }
+
+  renderStatistics({ 
+    ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale, 
+  }) { 
+    this.tableBody.insertAdjacentHTML('beforeend',
+      `<tr>
+        <td>Orders Count</td>
+        <td colspan="6">${ordersCount}</td>
+      </tr>
+      <tr>
+        <td>Orders Total</td>
+        <td colspan="6">$ ${ordersTotal}</td>
+      </tr>
+      <tr>
+        <td>Median Value</td>
+        <td colspan="6">$ ${median}</td>
+      </tr>
+      <tr>
+        <td>Average Check</td>
+        <td colspan="6">$ ${averageCheck}</td>
+      </tr>
+      <tr>
+        <td>Average Check (Female)</td>
+        <td colspan="6">$ ${averageCheckFemale}</td>
+      </tr>
+      <tr>
+        <td>Average Check (Male)</td>
+        <td colspan="6">$ ${averageCheckMale}</td>
+      </tr>`
+    );
+  }
 }
 
 export default new View();
