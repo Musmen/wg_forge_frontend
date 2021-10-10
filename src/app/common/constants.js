@@ -5,6 +5,8 @@ export const CARD_MASK_SETTINGS = {
   FINISH_INDEX_TO_END: 4,
 };
 
+export const MASK_SYMBOL = '*';
+
 export const USER_PREFIX_BY_GENDER = {
   Male: 'Mr.',
   Female: 'Ms.',
@@ -18,6 +20,7 @@ export const CLASS_NAMES = {
     BODY: 'main-table-body',
     HEAD: 'main-table-head',
   },
+  SEARCH_INPUT: 'search-input',
   USER: {
     LINK: 'user-link',
     DETAILS: 'user-details',
@@ -25,6 +28,12 @@ export const CLASS_NAMES = {
   HIDE: 'hide',
 };
 
+export const DEFAULT_SORT_BY_PROPERTY = 'order';
+
 export const SORTED_LABEL = '&#8595;';
 
 export const MONEY_FLOAT_DIGITS = 2;
+
+export const CURRENCY_SYMBOL = '$';
+
+export const EMPTY_AMOUNT_TO_PRINT = 'n/a';
