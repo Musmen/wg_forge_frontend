@@ -26,6 +26,7 @@ export const CLASS_NAMES = {
     DETAILS: 'user-details',
   },
   HIDE: 'hide',
+  CURRENCY_SELECT: 'currency-select',
 };
 
 export const DEFAULT_SORT_BY_PROPERTY = 'order';
@@ -34,6 +35,8 @@ export const SORTED_LABEL = '&#8595;';
 
 export const MONEY_FLOAT_DIGITS = 2;
 
-export const CURRENCY_SYMBOL = '$';
-
 export const EMPTY_AMOUNT_TO_PRINT = 'n/a';
+
+export const DEFAULT_CURRENCY = 'USD';
+
+export const DEFAULT_CURRENCY_RATIO = 1;

@@ -1,6 +1,10 @@
 @import "./scss/normalize.scss";
 @import "~bootstrap/scss/bootstrap";
 
+.main-table {
+  margin-bottom: 0;
+}
+
 .hide {
   display: none;
 }
@@ -25,5 +29,9 @@
 .search-input {
   width: 99%;
 
+  color: black;
+}
+
+.currency-select {
   color: black;
 }

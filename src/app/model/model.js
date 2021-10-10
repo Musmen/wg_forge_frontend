@@ -1,4 +1,5 @@
 import { fetchCompanies, fetchOrders, fetchUsers } from '../api/dataBaseAPI';
+import { fetchCurrencyRates, fetchCurrencySymbols } from '../api/exchangeRatesAPI';
 import { getCurrentUserById, getUserCompanyById } from '../common/helpers';
 
 class Model {
@@ -8,8 +9,14 @@ class Model {
 
   ordersForView = null;
 
+  currencySymbols = null;
+  currencyRates = null;
+
   init() {
-    return this.getFullTableData();
+    return Promise.all([
+      this.getFullTableData(),
+      this.getCurrencyExchangeData(),
+    ])
   }
 
   getOrders() {
@@ -54,6 +61,27 @@ class Model {
 
   getOrdersForView() {
     return this.ordersForView;
+  }
+
+  getCurrencyRates() {
+    return fetchCurrencyRates()
+      .then(
+        currencyRates => this.currencyRates = currencyRates.rates
+      );
+  }
+
+  getCurrencySymbols() {
+    return fetchCurrencySymbols()
+      .then(
+        currencySymbols => this.currencySymbols = currencySymbols.symbols
+      );
+  }
+
+  getCurrencyExchangeData() {
+    return Promise.all([
+      this.getCurrencyRates(),
+      this.getCurrencySymbols(),
+    ]);
   }
 }
 

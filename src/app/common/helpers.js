@@ -1,7 +1,8 @@
 import { 
-  CARD_MASK_SETTINGS, CURRENCY_SYMBOL, DEFAULT_SORT_BY_PROPERTY, EMPTY_AMOUNT_TO_PRINT, LOCALE_STRING,
+  CARD_MASK_SETTINGS, DEFAULT_SORT_BY_PROPERTY, EMPTY_AMOUNT_TO_PRINT, LOCALE_STRING,
   MASK_SYMBOL, MONEY_FLOAT_DIGITS, USER_PREFIX_BY_GENDER,
 } from './constants';
+import { CURRENCIES_SYMBOLS } from './currencies';
 
 export const fetchData = async url => {
   const response = await fetch(url);
@@ -72,6 +73,6 @@ export const getMedian = array => {
     : sortedArray[Math.floor(middleIndex)];
 }
 
-export const printAmount = (amount) => amount 
-  ? `${CURRENCY_SYMBOL} ${(+amount).toFixed(MONEY_FLOAT_DIGITS)}`
+export const printAmountFactory = (currencySymbol, currencyRatio) => (amount) => amount 
+  ? `${CURRENCIES_SYMBOLS[currencySymbol] || currencySymbol} ${(amount * currencyRatio).toFixed(MONEY_FLOAT_DIGITS)}`
   : EMPTY_AMOUNT_TO_PRINT;
