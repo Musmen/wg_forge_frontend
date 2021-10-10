@@ -168,7 +168,6 @@ class View {
   renderStatistics({ 
     ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale, 
   }) {
-    debugger;
     this.elements.table.body.insertAdjacentHTML('beforeend',
       `<tr class="table-dark">
         <td>Orders Count</td>

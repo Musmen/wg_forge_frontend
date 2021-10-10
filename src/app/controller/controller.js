@@ -1,8 +1,7 @@
 import { CLASS_NAMES, FEMALE_GENDER } from '../common/constants';
 import { 
-  getAverage,
-  getCompareFunction, getCurrentUserById, getMedian,
-  getOrders, getOrdersTotal, getUserCompanyById,
+  getAverage, getCompareFunction, getMedian,
+  getOrders, getOrdersTotal,
 } from '../common/helpers';
 
 class Controller {
