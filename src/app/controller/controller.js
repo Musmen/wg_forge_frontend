@@ -13,39 +13,37 @@ class Controller {
 
   ordersForView = null;
 
-  async init(model, view) {
-    this.model = model;
-    await this.model.init();
-    
-    this.view = view;
-    this.view.init();
-    
+  constructor() {
     this.beforeUnloadHandlerBinded = this.beforeUnloadHandler.bind(this);
     this.userLinkOnClickHandlerBinded = this.userLinkOnClickHandler.bind(this);
     this.tableHeadOnClickHandlerBinded = this.tableHeadOnClickHandler.bind(this);
+    this.searchInputChangeHandlerBinded = this.searchInputChangeHandler.bind(this);
+  }
+
+  async init(model, view) {
+    this.model = model;
+    await this.model.init();
+    this.ordersForView = this.model.getOrdersForView();
     
-    this.ordersForView = this.getOrdersForView();
-    this.addOrdersTable();
+    this.view = view;
+    this.view.init();
+    this.view.addSearchInputChangeHandler(this.searchInputChangeHandlerBinded);
+    this.view.addUserLinkOnClickHandler(this.userLinkOnClickHandlerBinded);
+    this.view.addTableHeadkOnClickHandler(this.tableHeadOnClickHandlerBinded);
+
+    this.addOrdersTable(this.ordersForView);
     
     window.addEventListener('beforeunload', this.beforeUnloadHandlerBinded);
   }
   
-  addOrdersTable() {
-    this.renderOrders(this.sortOrdersForView(this.ordersForView));
-    this.renderStatistics(this.getStatistics(this.ordersForView));
-
-    this.view.addUserLinkOnClickHandler(this.userLinkOnClickHandlerBinded);
-    this.view.addTableHeadkOnClickHandler(this.tableHeadOnClickHandlerBinded);
+  addOrdersTable(ordersForView) {
+    this.renderOrders(this.sortOrdersForView(ordersForView));
+    this.renderStatistics(this.getStatistics(ordersForView));
   }
 
-  getOrdersForView() {
-    return this.model.orders.map(
-      order => {
-        const currentUser = getCurrentUserById(this.model.users, order.user_id);
-        const userCompany = getUserCompanyById(this.model.companies, currentUser.company_id);
-        return { order, currentUser, userCompany };
-      }
-    );
+  updateOrdersTable(ordersForView) {
+    this.view.clearOrdersTable();
+    this.addOrdersTable(ordersForView);
   }
 
   sortOrdersForView(ordersForView) {
@@ -86,8 +84,23 @@ class Controller {
     this.sortState = newSortState;
 
     this.view.addSortedMark(clickedTableHeadCellWithSortingOption);
-    this.view.clearOrdersTable();
-    this.addOrdersTable();
+    this.updateOrdersTable(this.ordersForView);
+  }
+
+  searchInputChangeHandler(event) {
+    const searchedValue = event.target.value;
+    this.ordersForView = this.model.getOrdersForView()
+      .filter(
+        ({ order, currentUser }) => [
+            String(order.id), order.transaction_id, String(order.user_id), 
+            order.total, order.card_type, order.order_country, order.order_ip, 
+            currentUser.first_name, currentUser.last_name,
+          ]
+            .some(
+              searchedProperty => searchedProperty.includes(searchedValue)
+            )
+      )
+    this.updateOrdersTable(this.ordersForView);
   }
 
   getStatistics(ordersForView) {

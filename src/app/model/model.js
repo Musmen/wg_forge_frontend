@@ -1,9 +1,12 @@
 import { fetchCompanies, fetchOrders, fetchUsers } from '../api/dataBaseAPI';
+import { getCurrentUserById, getUserCompanyById } from '../common/helpers';
 
 class Model {
   orders = null;
   users = null;
   companies = null;
+
+  ordersForView = null;
 
   init() {
     return this.getFullTableData();
@@ -35,7 +38,22 @@ class Model {
       this.getOrders(),
       this.getUsers(),
       this.getCompanies(),
-    ]);
+    ])
+      .then(() => this.setOrdersForView());
+  }
+
+  setOrdersForView() {
+    this.ordersForView = this.orders.map(
+      order => {
+        const currentUser = getCurrentUserById(this.users, order.user_id);
+        const userCompany = getUserCompanyById(this.companies, currentUser.company_id);
+        return { order, currentUser, userCompany };
+      }
+    );
+  }
+
+  getOrdersForView() {
+    return this.ordersForView;
   }
 }
 

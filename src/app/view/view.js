@@ -1,51 +1,84 @@
-import { CLASS_NAMES, SORTED_LABEL } from '../common/constants';
+import { CLASS_NAMES, EMPTY_AMOUNT_TO_PRINT, SORTED_LABEL } from '../common/constants';
 import { 
-  getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix, getUserBirthday,
+  getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix, getUserBirthday, printAmount,
 } from '../common/helpers';
 
 class View {
   listenersList = []
 
-  table = null;
-  tableBody = null;
-  tableHead = null;
-  sortedMark = null;
+  elements = {
+    table: {
+      main: null,
+      body: null,
+      head: null,
+    },
+    sortedMark: null,
+    searchInput: null,
+  };
+  
 
   init() {
-    this.sortedMark = document.createElement('span');
-    this.sortedMark.innerHTML = SORTED_LABEL;
+    this.elements.table.main = document.querySelector(`.${CLASS_NAMES.TABLE.MAIN}`);
+    this.elements.table.body = this.elements.table.main.querySelector(`.${CLASS_NAMES.TABLE.BODY}`);
+    this.elements.table.head = this.elements.table.main.querySelector(`.${CLASS_NAMES.TABLE.HEAD}`);
 
-    this.table = document.querySelector(`.${CLASS_NAMES.TABLE.MAIN}`);
-    this.tableBody = this.table.querySelector(`.${CLASS_NAMES.TABLE.BODY}`);
-    this.tableHead = this.table.querySelector(`.${CLASS_NAMES.TABLE.HEAD}`);
+    this.elements.sortedMark = document.createElement('span');
+    this.elements.sortedMark.innerHTML = SORTED_LABEL;
+
+    this.elements.searchInput = this.elements.table.main.querySelector(`.${CLASS_NAMES.SEARCH_INPUT}`);
   }
 
   removeAllHandlers() {
     this.listenersList.forEach((listener) => {
-      this.table.removeEventListener(listener.event, listener.handler);
+      listener.element.removeEventListener(listener.event, listener.handler);
     });
   }
 
   clearOrdersTable() {
-    this.removeAllHandlers();
-    this.tableBody.innerHTML = '';
+    this.elements.table.body.innerHTML = '';
   }
 
   addUserLinkOnClickHandler(userLinkOnClickHandler) {
-    this.tableBody.addEventListener('click', userLinkOnClickHandler);
-    this.listenersList.push({event: 'click', handler: userLinkOnClickHandler});
+    this.elements.table.body.addEventListener('click', userLinkOnClickHandler);
+    this.listenersList.push({ 
+      element: this.elements.table.body, 
+      event: 'click', 
+      handler: userLinkOnClickHandler,
+    });
   }
 
   addTableHeadkOnClickHandler(tableHeadOnClickHandler) {
-    this.tableHead.addEventListener('click', tableHeadOnClickHandler);
-    this.listenersList.push({event: 'click', handler: tableHeadOnClickHandler});
+    this.elements.table.head.addEventListener('click', tableHeadOnClickHandler);
+    this.listenersList.push({ 
+      element: this.elements.table.head, 
+      event: 'click', 
+      handler: tableHeadOnClickHandler, 
+    });
+  }
+
+  addSearchInputChangeHandler(searchInputChangeHandler) {
+    this.elements.searchInput.addEventListener('input', searchInputChangeHandler);
+    this.listenersList.push({
+      element: this.elements.searchInput, 
+      event: 'input', 
+      handler: searchInputChangeHandler
+    });
   }
 
   addSortedMark(element) {
-    element.insertAdjacentElement('beforeend', this.sortedMark);
+    element.insertAdjacentElement('beforeend', this.elements.sortedMark);
   }
 
   renderOrders(ordersForView) {
+    if (!ordersForView.length) {
+      this.elements.table.body.insertAdjacentHTML('beforeend',
+        `<tr>
+          <td colspan="7">Nothing found</td>
+        </tr>`
+      );
+      return;
+    }
+
     const ordersFragment = new DocumentFragment();
 
     ordersForView.forEach(
@@ -56,7 +89,7 @@ class View {
       }
     );
     
-    this.tableBody.append(ordersFragment);
+    this.elements.table.body.append(ordersFragment);
   }
 
   renderOrderTableRow(order, currentUser, userCompany) {
@@ -64,7 +97,7 @@ class View {
 
     orderTableRow.className='table-row';
     orderTableRow.id=`order_${order.id}`;
-
+    
     orderTableRow.insertAdjacentHTML('beforeend',
       `<td class="order-transaction-id">
         ${order.transaction_id}
@@ -76,7 +109,7 @@ class View {
         ${getOrderTime(order.created_at)}
       </td>
       <td class="order-total">
-        $${order.total}
+        ${printAmount(order.total)}
       </td>
       <td class="order-card-number">
         ${getCardNumberMask(order.card_number)}
@@ -134,31 +167,32 @@ class View {
 
   renderStatistics({ 
     ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale, 
-  }) { 
-    this.tableBody.insertAdjacentHTML('beforeend',
-      `<tr>
+  }) {
+    debugger;
+    this.elements.table.body.insertAdjacentHTML('beforeend',
+      `<tr class="table-dark">
         <td>Orders Count</td>
-        <td colspan="6">${ordersCount}</td>
+        <td colspan="6">${ordersCount || EMPTY_AMOUNT_TO_PRINT}</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <td>Orders Total</td>
-        <td colspan="6">$ ${ordersTotal}</td>
+        <td colspan="6">${printAmount(ordersTotal)}</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <td>Median Value</td>
-        <td colspan="6">$ ${median}</td>
+        <td colspan="6">${printAmount(median)}</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <td>Average Check</td>
-        <td colspan="6">$ ${averageCheck}</td>
+        <td colspan="6">${printAmount(averageCheck)}</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <td>Average Check (Female)</td>
-        <td colspan="6">$ ${averageCheckFemale}</td>
+        <td colspan="6">${printAmount(averageCheckFemale)}</td>
       </tr>
-      <tr>
+      <tr class="table-dark">
         <td>Average Check (Male)</td>
-        <td colspan="6">$ ${averageCheckMale}</td>
+        <td colspan="6">${printAmount(averageCheckMale)}</td>
       </tr>`
     );
   }

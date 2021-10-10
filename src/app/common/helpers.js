@@ -1,5 +1,6 @@
 import { 
-  CARD_MASK_SETTINGS, LOCALE_STRING, MONEY_FLOAT_DIGITS, USER_PREFIX_BY_GENDER,
+  CARD_MASK_SETTINGS, CURRENCY_SYMBOL, DEFAULT_SORT_BY_PROPERTY, EMPTY_AMOUNT_TO_PRINT, LOCALE_STRING,
+  MASK_SYMBOL, MONEY_FLOAT_DIGITS, USER_PREFIX_BY_GENDER,
 } from './constants';
 
 export const fetchData = async url => {
@@ -12,7 +13,7 @@ export const getCardNumberMask = cardNumber =>
     cardNumber
       .slice(0, CARD_MASK_SETTINGS.START_INDEX)
   }${
-    '*'.repeat(cardNumber.length - (CARD_MASK_SETTINGS.START_INDEX + CARD_MASK_SETTINGS.FINISH_INDEX_TO_END))
+    MASK_SYMBOL.repeat(cardNumber.length - (CARD_MASK_SETTINGS.START_INDEX + CARD_MASK_SETTINGS.FINISH_INDEX_TO_END))
   }${
     cardNumber.slice(-CARD_MASK_SETTINGS.FINISH_INDEX_TO_END)
   }`;
@@ -37,7 +38,7 @@ export const getUserCompanyById =
 
 export const getCompareFunction = sortState => {
   const [compareProperty, secondCompareProperty] = sortState.sortByProperties;
-  const sortByObject = sortState.sortByObject || 'order';
+  const sortByObject = sortState.sortByObject || DEFAULT_SORT_BY_PROPERTY;
 
   if (sortState.isNumericSorting) return (firstCompareOrder, secondCompareOrder) => 
   firstCompareOrder[sortByObject][compareProperty] - secondCompareOrder[sortByObject][compareProperty]
@@ -57,16 +58,20 @@ const numericCompare = (firstElement, secondElement) => firstElement - secondEle
 
 export const getOrders = ordersForView => ordersForView.map(orderForView => orderForView.order);
 
-export const getAverage = (total, count) => (total / count).toFixed(MONEY_FLOAT_DIGITS);
+export const getAverage = (total, count) => (total / count);
 
 export const getOrdersTotal = orders => +orders.reduce(
   (accumulator, currentOrder) => accumulator + +currentOrder.total, 0,
-).toFixed(MONEY_FLOAT_DIGITS);
+);
 
 export const getMedian = array => {
   const sortedArray = array.sort(numericCompare);
   const middleIndex = sortedArray.length / 2;
   return middleIndex % 1 === 0 
-    ? ((sortedArray[middleIndex - 1] + sortedArray[middleIndex]) / 2).toFixed(MONEY_FLOAT_DIGITS)
+    ? ((sortedArray[middleIndex - 1] + sortedArray[middleIndex]) / 2)
     : sortedArray[Math.floor(middleIndex)];
 }
+
+export const printAmount = (amount) => amount 
+  ? `${CURRENCY_SYMBOL} ${(+amount).toFixed(MONEY_FLOAT_DIGITS)}`
+  : EMPTY_AMOUNT_TO_PRINT;
