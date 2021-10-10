@@ -1,6 +1,7 @@
-import { CLASS_NAMES, EMPTY_AMOUNT_TO_PRINT, SORTED_LABEL } from '../common/constants';
+import { CLASS_NAMES, DEFAULT_CURRENCY, EMPTY_AMOUNT_TO_PRINT, SORTED_LABEL } from '../common/constants';
+import { CURRENCIES_SYMBOLS } from '../common/currencies';
 import { 
-  getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix, getUserBirthday, printAmount,
+  getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix, getUserBirthday,
 } from '../common/helpers';
 
 class View {
@@ -14,8 +15,10 @@ class View {
     },
     sortedMark: null,
     searchInput: null,
+    currencySelect: null,
   };
   
+  printAmount = null;
 
   init() {
     this.elements.table.main = document.querySelector(`.${CLASS_NAMES.TABLE.MAIN}`);
@@ -26,6 +29,8 @@ class View {
     this.elements.sortedMark.innerHTML = SORTED_LABEL;
 
     this.elements.searchInput = this.elements.table.main.querySelector(`.${CLASS_NAMES.SEARCH_INPUT}`);
+    
+    this.elements.currencySelect = this.elements.table.main.querySelector(`.${CLASS_NAMES.CURRENCY_SELECT}`);
   }
 
   removeAllHandlers() {
@@ -61,7 +66,16 @@ class View {
     this.listenersList.push({
       element: this.elements.searchInput, 
       event: 'input', 
-      handler: searchInputChangeHandler
+      handler: searchInputChangeHandler,
+    });
+  }
+
+  addCurrencySelectChangeHandler(currencySelectChangeHandler) {
+    this.elements.currencySelect.addEventListener('change', currencySelectChangeHandler);
+    this.listenersList.push({
+      element: this.elements.currencySelect, 
+      event: 'change', 
+      handler: currencySelectChangeHandler,
     });
   }
 
@@ -109,7 +123,7 @@ class View {
         ${getOrderTime(order.created_at)}
       </td>
       <td class="order-total">
-        ${printAmount(order.total)}
+        ${this.printAmount(order.total)}
       </td>
       <td class="order-card-number">
         ${getCardNumberMask(order.card_number)}
@@ -168,7 +182,6 @@ class View {
   renderStatistics({ 
     ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale, 
   }) {
-    debugger;
     this.elements.table.body.insertAdjacentHTML('beforeend',
       `<tr class="table-dark">
         <td>Orders Count</td>
@@ -176,25 +189,47 @@ class View {
       </tr>
       <tr class="table-dark">
         <td>Orders Total</td>
-        <td colspan="6">${printAmount(ordersTotal)}</td>
+        <td colspan="6">${this.printAmount(ordersTotal)}</td>
       </tr>
       <tr class="table-dark">
         <td>Median Value</td>
-        <td colspan="6">${printAmount(median)}</td>
+        <td colspan="6">${this.printAmount(median)}</td>
       </tr>
       <tr class="table-dark">
         <td>Average Check</td>
-        <td colspan="6">${printAmount(averageCheck)}</td>
+        <td colspan="6">${this.printAmount(averageCheck)}</td>
       </tr>
       <tr class="table-dark">
         <td>Average Check (Female)</td>
-        <td colspan="6">${printAmount(averageCheckFemale)}</td>
+        <td colspan="6">${this.printAmount(averageCheckFemale)}</td>
       </tr>
       <tr class="table-dark">
         <td>Average Check (Male)</td>
-        <td colspan="6">${printAmount(averageCheckMale)}</td>
+        <td colspan="6">${this.printAmount(averageCheckMale)}</td>
       </tr>`
     );
+  }
+  
+  renderCurrencySelect(currencySymbols) {
+    const currencyOptionsFragment = new DocumentFragment();
+
+    Object.entries(currencySymbols).forEach(
+      ([currencySymbol, currencySymbolDescription]) => {
+        currencyOptionsFragment.append(
+          this.renderCurrencyOption(currencySymbol, currencySymbolDescription)
+        )
+      }
+    );
+    
+    this.elements.currencySelect.append(currencyOptionsFragment);
+  }
+
+  renderCurrencyOption(currencySymbol, currencySymbolDescription) {
+    const currencyOption = document.createElement('option');
+    if (currencySymbol === DEFAULT_CURRENCY) currencyOption.selected = true;
+    currencyOption.value = currencySymbol;
+    currencyOption.textContent = `${currencySymbolDescription} ${CURRENCIES_SYMBOLS[currencySymbol] || ''}`;
+    return currencyOption;
   }
 }
 

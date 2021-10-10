@@ -1,8 +1,9 @@
-import { CLASS_NAMES, FEMALE_GENDER } from '../common/constants';
 import { 
-  getAverage,
-  getCompareFunction, getCurrentUserById, getMedian,
-  getOrders, getOrdersTotal, getUserCompanyById,
+  CLASS_NAMES, DEFAULT_CURRENCY, DEFAULT_CURRENCY_RATIO, FEMALE_GENDER,
+} from '../common/constants';
+import { 
+  getAverage, getCompareFunction, getMedian,
+  getOrders, getOrdersTotal, printAmountFactory,
 } from '../common/helpers';
 
 class Controller {
@@ -13,24 +14,34 @@ class Controller {
 
   ordersForView = null;
 
+  baseUSDRatio = null;
+  currentCurrency = DEFAULT_CURRENCY;
+
   constructor() {
     this.beforeUnloadHandlerBinded = this.beforeUnloadHandler.bind(this);
     this.userLinkOnClickHandlerBinded = this.userLinkOnClickHandler.bind(this);
     this.tableHeadOnClickHandlerBinded = this.tableHeadOnClickHandler.bind(this);
     this.searchInputChangeHandlerBinded = this.searchInputChangeHandler.bind(this);
+    this.currencySelectChangeHandlerBinded = this.currencySelectChangeHandler.bind(this);
   }
 
   async init(model, view) {
     this.model = model;
     await this.model.init();
+
     this.ordersForView = this.model.getOrdersForView();
     
+    this.baseUSDRatio = this.model.currencyRates[DEFAULT_CURRENCY];
     this.view = view;
     this.view.init();
+    this.setPrintAmount();
+
+    this.view.renderCurrencySelect(this.model.currencySymbols);
+    this.view.addCurrencySelectChangeHandler(this.currencySelectChangeHandlerBinded);
+
     this.view.addSearchInputChangeHandler(this.searchInputChangeHandlerBinded);
     this.view.addUserLinkOnClickHandler(this.userLinkOnClickHandlerBinded);
     this.view.addTableHeadkOnClickHandler(this.tableHeadOnClickHandlerBinded);
-
     this.addOrdersTable(this.ordersForView);
     
     window.addEventListener('beforeunload', this.beforeUnloadHandlerBinded);
@@ -101,6 +112,24 @@ class Controller {
             )
       )
     this.updateOrdersTable(this.ordersForView);
+  }
+
+  currencySelectChangeHandler({ target }) {
+    if (this.currentCurrency === target.value) return;
+
+    this.currentCurrency = target.value;
+    this.setPrintAmount(
+      this.currentCurrency, 
+      this.model.currencyRates[this.currentCurrency] / this.baseUSDRatio,
+    );
+    this.updateOrdersTable(this.ordersForView);
+  }
+
+  setPrintAmount(
+    currentCurrency = DEFAULT_CURRENCY, 
+    currentCurrencyRatio = DEFAULT_CURRENCY_RATIO
+  ) {
+    this.view.printAmount = printAmountFactory(currentCurrency, currentCurrencyRatio);
   }
 
   getStatistics(ordersForView) {
