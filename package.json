@@ -38,7 +38,6 @@
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.1.1",
     "css-loader": "^5.1.1",
-    "jquery": "^3.6.0",
     "postcss-loader": "^4.2.0",
     "regenerator-runtime": "^0.13.9",
     "sass-loader": "^10.1.1",

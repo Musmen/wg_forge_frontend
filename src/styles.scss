@@ -3,6 +3,30 @@
 
 .main-table {
   margin-bottom: 0;
+
+  th, td {
+    text-align: center;
+  }
+
+  thead tr {
+    vertical-align: middle;
+  }
+
+  .search-input-label {
+    text-align: right;
+  }
+}
+
+.statistic-row {
+  td {
+    text-align: initial;
+
+    &:first-child {
+      text-align: right;
+
+      border-right: 1px solid white;
+    }
+  }
 }
 
 .hide {
@@ -22,10 +46,6 @@
   }
 }
 
-.search-input-label {
-  text-align: right;
-}
-
 .search-input {
   width: 99%;
 
@@ -34,4 +54,20 @@
 
 .currency-select {
   color: black;
+
+  cursor: pointer;
+}
+
+.user-link {
+  display: block;
+  width: 200px;
+
+  user-select: none;
+}
+
+.user-details {
+  width: 200px;
+  margin-top: 5px;
+
+  text-align: center;
 }
