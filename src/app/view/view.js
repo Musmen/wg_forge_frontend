@@ -1,5 +1,7 @@
-import { CLASS_NAMES, DEFAULT_CURRENCY, EMPTY_AMOUNT_TO_PRINT, SORTED_LABEL } from '../common/constants';
 import { CURRENCIES_SYMBOLS } from '../common/currencies';
+import { 
+  CLASS_NAMES, DEFAULT_CURRENCY, EMPTY_AMOUNT_TO_PRINT, SORTED_LABEL 
+} from '../common/constants';
 import { 
   getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix, getUserBirthday,
 } from '../common/helpers';
@@ -146,7 +148,9 @@ class View {
   }
 
   renderUserLink(currentUser) {
-    return `<a class="user-link" href="#">${getUserPrefix(currentUser)} ${getUserFullName(currentUser)}</a>`
+    return `<a class="user-link btn btn-primary" href="#">
+      ${getUserPrefix(currentUser)} ${getUserFullName(currentUser)}
+    </a>`
   }
 
   renderUserDetails(currentUser, userCompany) {
@@ -165,7 +169,7 @@ class View {
 
   renderUserAvatar(currentUser) {
     if (!currentUser.avatar) return '';
-    return `<p><img src="${currentUser.avatar}" width="100px"></p>`;
+    return `<p><img src="${currentUser.avatar}" width="100px" alt="user avatar"></p>`;
   }
 
   renderUserCompanyDetails(userCompany) {
@@ -183,27 +187,27 @@ class View {
     ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale, 
   }) {
     this.elements.table.body.insertAdjacentHTML('beforeend',
-      `<tr class="table-dark">
+      `<tr class="table-dark statistic-row">
         <td>Orders Count</td>
         <td colspan="6">${ordersCount || EMPTY_AMOUNT_TO_PRINT}</td>
       </tr>
-      <tr class="table-dark">
+      <tr class="table-dark statistic-row">
         <td>Orders Total</td>
         <td colspan="6">${this.printAmount(ordersTotal)}</td>
       </tr>
-      <tr class="table-dark">
+      <tr class="table-dark statistic-row">
         <td>Median Value</td>
         <td colspan="6">${this.printAmount(median)}</td>
       </tr>
-      <tr class="table-dark">
+      <tr class="table-dark statistic-row">
         <td>Average Check</td>
         <td colspan="6">${this.printAmount(averageCheck)}</td>
       </tr>
-      <tr class="table-dark">
+      <tr class="table-dark statistic-row">
         <td>Average Check (Female)</td>
         <td colspan="6">${this.printAmount(averageCheckFemale)}</td>
       </tr>
-      <tr class="table-dark">
+      <tr class="table-dark statistic-row">
         <td>Average Check (Male)</td>
         <td colspan="6">${this.printAmount(averageCheckMale)}</td>
       </tr>`

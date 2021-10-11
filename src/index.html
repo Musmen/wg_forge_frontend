@@ -10,28 +10,31 @@
       <table class="main-table table table-striped table-hover">
         <thead class="main-table-head table-dark">
           <tr>
-            <th>
+            <th scope="col">
               Choose currency: 
               <select class="currency-select">
               </select>
             </th>
-            <th class="search-input-label">Search:</th>
-            <th colspan="5"><input class="search-input" type="text" id="search"></th>
+            <th scope="col" class="search-input-label">Search:</th>
+            <th scope="col" colspan="5"><input class="search-input" type="text" id="search"></th>
           </tr>
           <tr>
-            <th data-sort-by-properties="transaction_id">Transaction ID</th>
+            <th scope="col" data-sort-by-properties="transaction_id">Transaction ID</th>
             <th 
+              scope="col"
               data-sort-by-object="currentUser" 
               data-sort-by-properties="first_name,last_name">User Info</th>
             <th 
+              scope="col"
               data-is-numeric-sorting="true" 
               data-sort-by-properties="created_at">Order Date</th>
             <th 
+              scope="col"
               data-is-numeric-sorting="true" 
               data-sort-by-properties="total">Order Amount</th>
-            <th>Card Number</th>
-            <th data-sort-by-properties="card_type">Card Type</th>
-            <th data-sort-by-properties="order_country,order_ip">Location</th>
+            <th scope="col">Card Number</th>
+            <th scope="col" data-sort-by-properties="card_type">Card Type</th>
+            <th scope="col" data-sort-by-properties="order_country,order_ip">Location</th>
           </tr>
         </thead>
         <tbody class="main-table-body table-striped">
