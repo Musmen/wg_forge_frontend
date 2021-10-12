@@ -1,26 +1,28 @@
-import { CURRENCIES_SYMBOLS } from '../common/currencies';
-import { 
-  CLASS_NAMES, DEFAULT_CURRENCY, EMPTY_AMOUNT_TO_PRINT, SORTED_LABEL 
+import CURRENCIES_SYMBOLS from '../common/currencies';
+import {
+  CLASS_NAMES, DEFAULT_CURRENCY, EMPTY_AMOUNT_TO_PRINT, SORTED_LABEL,
 } from '../common/constants';
-import { 
+import {
   getCardNumberMask, getOrderTime, getUserFullName, getUserPrefix, getUserBirthday,
 } from '../common/helpers';
 
 class View {
-  listenersList = []
+  constructor() {
+    this.listenersList = [];
 
-  elements = {
-    table: {
-      main: null,
-      body: null,
-      head: null,
-    },
-    sortedMark: null,
-    searchInput: null,
-    currencySelect: null,
-  };
-  
-  printAmount = null;
+    this.elements = {
+      table: {
+        main: null,
+        body: null,
+        head: null,
+      },
+      sortedMark: null,
+      searchInput: null,
+      currencySelect: null,
+    };
+
+    this.printAmount = null;
+  }
 
   init() {
     this.elements.table.main = document.querySelector(`.${CLASS_NAMES.TABLE.MAIN}`);
@@ -31,7 +33,7 @@ class View {
     this.elements.sortedMark.innerHTML = SORTED_LABEL;
 
     this.elements.searchInput = this.elements.table.main.querySelector(`.${CLASS_NAMES.SEARCH_INPUT}`);
-    
+
     this.elements.currencySelect = this.elements.table.main.querySelector(`.${CLASS_NAMES.CURRENCY_SELECT}`);
   }
 
@@ -47,27 +49,27 @@ class View {
 
   addUserLinkOnClickHandler(userLinkOnClickHandler) {
     this.elements.table.body.addEventListener('click', userLinkOnClickHandler);
-    this.listenersList.push({ 
-      element: this.elements.table.body, 
-      event: 'click', 
+    this.listenersList.push({
+      element: this.elements.table.body,
+      event: 'click',
       handler: userLinkOnClickHandler,
     });
   }
 
   addTableHeadkOnClickHandler(tableHeadOnClickHandler) {
     this.elements.table.head.addEventListener('click', tableHeadOnClickHandler);
-    this.listenersList.push({ 
-      element: this.elements.table.head, 
-      event: 'click', 
-      handler: tableHeadOnClickHandler, 
+    this.listenersList.push({
+      element: this.elements.table.head,
+      event: 'click',
+      handler: tableHeadOnClickHandler,
     });
   }
 
   addSearchInputChangeHandler(searchInputChangeHandler) {
     this.elements.searchInput.addEventListener('input', searchInputChangeHandler);
     this.listenersList.push({
-      element: this.elements.searchInput, 
-      event: 'input', 
+      element: this.elements.searchInput,
+      event: 'input',
       handler: searchInputChangeHandler,
     });
   }
@@ -75,8 +77,8 @@ class View {
   addCurrencySelectChangeHandler(currencySelectChangeHandler) {
     this.elements.currencySelect.addEventListener('change', currencySelectChangeHandler);
     this.listenersList.push({
-      element: this.elements.currencySelect, 
-      event: 'change', 
+      element: this.elements.currencySelect,
+      event: 'change',
       handler: currencySelectChangeHandler,
     });
   }
@@ -90,8 +92,7 @@ class View {
       this.elements.table.body.insertAdjacentHTML('beforeend',
         `<tr>
           <td colspan="7">Nothing found</td>
-        </tr>`
-      );
+        </tr>`);
       return;
     }
 
@@ -100,20 +101,20 @@ class View {
     ordersForView.forEach(
       ({ order, currentUser, userCompany }) => {
         ordersFragment.append(
-          this.renderOrderTableRow(order, currentUser, userCompany)
-        )
-      }
+          this.renderOrderTableRow(order, currentUser, userCompany),
+        );
+      },
     );
-    
+
     this.elements.table.body.append(ordersFragment);
   }
 
   renderOrderTableRow(order, currentUser, userCompany) {
     const orderTableRow = document.createElement('tr');
 
-    orderTableRow.className='table-row';
-    orderTableRow.id=`order_${order.id}`;
-    
+    orderTableRow.className = 'table-row';
+    orderTableRow.id = `order_${order.id}`;
+
     orderTableRow.insertAdjacentHTML('beforeend',
       `<td class="order-transaction-id">
         ${order.transaction_id}
@@ -135,8 +136,7 @@ class View {
       </td>
       <td class="order-location">
         ${order.order_country} (${order.order_ip})
-      </td>`
-    )
+      </td>`);
 
     return orderTableRow;
   }
@@ -150,7 +150,7 @@ class View {
   renderUserLink(currentUser) {
     return `<a class="user-link btn btn-primary" href="#">
       ${getUserPrefix(currentUser)} ${getUserFullName(currentUser)}
-    </a>`
+    </a>`;
   }
 
   renderUserDetails(currentUser, userCompany) {
@@ -183,8 +183,8 @@ class View {
       </p>`;
   }
 
-  renderStatistics({ 
-    ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale, 
+  renderStatistics({
+    ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale,
   }) {
     this.elements.table.body.insertAdjacentHTML('beforeend',
       `<tr class="table-dark statistic-row">
@@ -210,21 +210,20 @@ class View {
       <tr class="table-dark statistic-row">
         <td>Average Check (Male)</td>
         <td colspan="6">${this.printAmount(averageCheckMale)}</td>
-      </tr>`
-    );
+      </tr>`);
   }
-  
+
   renderCurrencySelect(currencySymbols) {
     const currencyOptionsFragment = new DocumentFragment();
 
     Object.entries(currencySymbols).forEach(
       ([currencySymbol, currencySymbolDescription]) => {
         currencyOptionsFragment.append(
-          this.renderCurrencyOption(currencySymbol, currencySymbolDescription)
-        )
-      }
+          this.renderCurrencyOption(currencySymbol, currencySymbolDescription),
+        );
+      },
     );
-    
+
     this.elements.currencySelect.append(currencyOptionsFragment);
   }
 
@@ -237,4 +236,5 @@ class View {
   }
 }
 
-export default new View();
+const view = new View();
+export default view;

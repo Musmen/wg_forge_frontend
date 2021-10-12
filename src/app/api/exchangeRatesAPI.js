@@ -8,7 +8,7 @@ const getApiURL = (endpoint) => `${EXCHANGE_RATES_API_BASE_URL}${endpoint}?acces
 const EXCHANGE_RATES_API_URLS = {
   SYMBOLS: getApiURL('symbols'),
   RATES: getApiURL('latest'),
-}
+};
 
 export const fetchCurrencySymbols = () => fetchData(EXCHANGE_RATES_API_URLS.SYMBOLS);
 export const fetchCurrencyRates = () => fetchData(EXCHANGE_RATES_API_URLS.RATES);

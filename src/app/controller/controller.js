@@ -1,23 +1,23 @@
-import { 
+import {
   CLASS_NAMES, DEFAULT_CURRENCY, DEFAULT_CURRENCY_RATIO, FEMALE_GENDER,
 } from '../common/constants';
-import { 
+import {
   getAverage, getCompareFunction, getMedian,
   getOrders, getOrdersTotal, printAmountFactory,
 } from '../common/helpers';
 
 class Controller {
-  model = null;
-  view = null;
-
-  sortState = null;
-
-  ordersForView = null;
-
-  baseUSDRatio = null;
-  currentCurrency = DEFAULT_CURRENCY;
-
   constructor() {
+    this.model = null;
+    this.view = null;
+
+    this.sortState = null;
+
+    this.ordersForView = null;
+
+    this.baseUSDRatio = null;
+    this.currentCurrency = DEFAULT_CURRENCY;
+
     this.beforeUnloadHandlerBinded = this.beforeUnloadHandler.bind(this);
     this.userLinkOnClickHandlerBinded = this.userLinkOnClickHandler.bind(this);
     this.tableHeadOnClickHandlerBinded = this.tableHeadOnClickHandler.bind(this);
@@ -25,15 +25,12 @@ class Controller {
     this.currencySelectChangeHandlerBinded = this.currencySelectChangeHandler.bind(this);
   }
 
-  async init(model, view) {
+  init(model, view) {
     this.model = model;
-    await this.model.init();
-
     this.ordersForView = this.model.getOrdersForView();
-    
     this.baseUSDRatio = this.model.currencyRates[DEFAULT_CURRENCY];
+
     this.view = view;
-    this.view.init();
     this.setPrintAmount();
 
     this.view.renderCurrencySelect(this.model.currencySymbols);
@@ -43,10 +40,10 @@ class Controller {
     this.view.addUserLinkOnClickHandler(this.userLinkOnClickHandlerBinded);
     this.view.addTableHeadkOnClickHandler(this.tableHeadOnClickHandlerBinded);
     this.addOrdersTable(this.ordersForView);
-    
+
     window.addEventListener('beforeunload', this.beforeUnloadHandlerBinded);
   }
-  
+
   addOrdersTable(ordersForView) {
     this.renderOrders(this.sortOrdersForView(ordersForView));
     this.renderStatistics(this.getStatistics(ordersForView));
@@ -76,21 +73,21 @@ class Controller {
     const clickedUserLink = event.target.closest(`.${CLASS_NAMES.USER.LINK}`);
     if (!clickedUserLink) return;
     event.preventDefault();
-    
+
     const userDetailsBlock = clickedUserLink.parentElement.querySelector(`.${CLASS_NAMES.USER.DETAILS}`);
     userDetailsBlock.classList.toggle(CLASS_NAMES.HIDE);
   }
 
   tableHeadOnClickHandler(event) {
-    const clickedTableHeadCellWithSortingOption = event.target.closest(`[data-sort-by-properties]`);
+    const clickedTableHeadCellWithSortingOption = event.target.closest('[data-sort-by-properties]');
 
     if (!clickedTableHeadCellWithSortingOption) return;
 
-    const newSortState = { 
+    const newSortState = {
       ...clickedTableHeadCellWithSortingOption.dataset,
-      sortByProperties: clickedTableHeadCellWithSortingOption.dataset.sortByProperties.split(','), 
-    }
-    
+      sortByProperties: clickedTableHeadCellWithSortingOption.dataset.sortByProperties.split(','),
+    };
+
     if (JSON.stringify(newSortState) === JSON.stringify(this.sortState)) return;
     this.sortState = newSortState;
 
@@ -103,14 +100,14 @@ class Controller {
     this.ordersForView = this.model.getOrdersForView()
       .filter(
         ({ order, currentUser }) => [
-            String(order.id), order.transaction_id, String(order.user_id), 
-            order.total, order.card_type, order.order_country, order.order_ip, 
-            currentUser.first_name, currentUser.last_name,
-          ]
-            .some(
-              searchedProperty => searchedProperty.includes(searchedValue)
-            )
-      )
+          String(order.id), order.transaction_id, String(order.user_id),
+          order.total, order.card_type, order.order_country, order.order_ip,
+          currentUser.first_name, currentUser.last_name,
+        ]
+          .some(
+            (searchedProperty) => searchedProperty.includes(searchedValue),
+          ),
+      );
     this.updateOrdersTable(this.ordersForView);
   }
 
@@ -119,15 +116,15 @@ class Controller {
 
     this.currentCurrency = target.value;
     this.setPrintAmount(
-      this.currentCurrency, 
+      this.currentCurrency,
       this.model.currencyRates[this.currentCurrency] / this.baseUSDRatio,
     );
     this.updateOrdersTable(this.ordersForView);
   }
 
   setPrintAmount(
-    currentCurrency = DEFAULT_CURRENCY, 
-    currentCurrencyRatio = DEFAULT_CURRENCY_RATIO
+    currentCurrency = DEFAULT_CURRENCY,
+    currentCurrencyRatio = DEFAULT_CURRENCY_RATIO,
   ) {
     this.view.printAmount = printAmountFactory(currentCurrency, currentCurrencyRatio);
   }
@@ -136,22 +133,22 @@ class Controller {
     const orders = getOrders(ordersForView);
     const ordersCount = orders.length;
     const ordersTotal = getOrdersTotal(orders);
-    const median = getMedian(orders.map(order => +order.total));
+    const median = getMedian(orders.map((order) => +order.total));
     const averageCheck = getAverage(ordersTotal, ordersCount);
 
-    const ordersForViewFemale =  ordersForView.filter(
-      orderForView => orderForView.currentUser.gender === FEMALE_GENDER
+    const ordersForViewFemale = ordersForView.filter(
+      (orderForView) => orderForView.currentUser.gender === FEMALE_GENDER,
     );
     const ordersFemale = getOrders(ordersForViewFemale);
     const ordersCountFemale = ordersFemale.length;
-    const ordersTotalFemale = getOrdersTotal(ordersFemale); 
+    const ordersTotalFemale = getOrdersTotal(ordersFemale);
     const averageCheckFemale = getAverage(ordersTotalFemale, ordersCountFemale);
-    
+
     const ordersCountMale = ordersCount - ordersCountFemale;
     const ordersTotalMale = ordersTotal - ordersTotalFemale;
     const averageCheckMale = getAverage(ordersTotalMale, ordersCountMale);
 
-    return { 
+    return {
       ordersCount, ordersTotal, median, averageCheck, averageCheckFemale, averageCheckMale,
     };
   }
@@ -162,4 +159,5 @@ class Controller {
   }
 }
 
-export default new Controller();
+const controller = new Controller();
+export default controller;
