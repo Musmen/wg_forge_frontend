@@ -7,10 +7,14 @@ import model from './app/model/model';
 import view from './app/view/view';
 import controller from './app/controller/controller';
 
+const appInit = async () => {
+  await model.init();
+  view.init();
+  controller.init(model, view);
+
+  document.removeEventListener('DOMContentLoaded', appInit);
+};
+
 export default (function app() {
-  window.onload = async () => {
-    await model.init();
-    view.init();
-    controller.init(model, view);
-  };
+  document.addEventListener('DOMContentLoaded', appInit);
 }());
